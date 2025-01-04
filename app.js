@@ -80,6 +80,26 @@ nextBtn.addEventListener('click', function(){
    changeImage();
 })
 
+// Auto slider function =========
+const autoSlide = setInterval(() => {
+   if(init < imgs.length - 1){
+      init++;
+   }else{
+      init= 0;
+   }
+   changeImage();
+}, 4000);
 
 
+console.log(init - 1 + imgs.length)
 
+// =========== Products slider functionality ;
+
+const scrollContainer = document.querySelectorAll('.slide-products');
+
+scrollContainer.forEach(item =>{
+   item.addEventListener('wheel', (e)=>{
+      e.preventDefault();
+      item.scrollLeft += e.deltaY;
+   })
+})
