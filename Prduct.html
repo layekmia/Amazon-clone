@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Input Focus Overlay with Conditions</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    /* Header styles */
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background-color: #333;
+      color: white;
+      padding: 10px 20px;
+      z-index: 20;
+    }
+
+    header a {
+      text-decoration: none;
+      color: white;
+      margin-right: 20px;
+    }
+
+    /* Main content styles */
+    .content {
+      margin-top: 70px; /* Avoid overlapping with the header */
+      padding: 20px;
+    }
+
+    /* Search bar styles */
+    .search-container {
+      position: relative;
+    }
+
+    .search-container input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+    }
+
+    /* Overlay styles */
+    .overlay {
+      position: fixed;
+      inset: 0; /* Fullscreen overlay */
+      background-color: rgba(0, 0, 0, 0.5); /* Transparent black */
+      z-index: 10;
+      display: none; /* Initially hidden */
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="#" id="logo">Logo</a>
+    <nav>
+      <a href="#home">Home</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <div class="content">
+    <div class="search-container">
+      <input type="text" id="search-bar" placeholder="Search something...">
+    </div>
+  </div>
+  <div class="overlay" id="overlay"></div>
+
+  <script>
+    // JavaScript for handling the overlay with conditions
+    const searchBar = document.getElementById('search-bar');
+    const overlay = document.getElementById('overlay');
+    const header = document.querySelector('header');
+
+    // Helper variable to prevent blinking
+    let ignoreClick = false;
+
+    // Show overlay when the search bar gains focus
+    searchBar.addEventListener('focus', () => {
+      overlay.style.display = 'block';
+      ignoreClick = true; // Temporarily ignore clicks to prevent blinking
+      setTimeout(() => (ignoreClick = false), 200); // Reset after a short delay
+    });
+
+    // Hide overlay when clicking outside the input field
+    document.addEventListener('click', (event) => {
+      if (ignoreClick) return; // Skip handling if ignoring clicks
+
+      const isInsideHeader = header.contains(event.target);
+      const isSearchBar = searchBar.contains(event.target);
+
+      if (!isSearchBar && overlay.style.display === 'block') {
+        overlay.style.display = 'none';
+        searchBar.blur(); // Remove focus from input
+      }
+    });
+
+    // Ensure the overlay doesn't appear when interacting with the header
+    header.addEventListener('click', () => {
+      if (overlay.style.display === 'block') {
+        overlay.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>
